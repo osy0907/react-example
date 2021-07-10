@@ -1,2 +1,2 @@
-# react-basic
-react-basic
+# react-app
+react-app
