@@ -1,7 +1,8 @@
 import './App.css';
 import TOC from './components/TOC';
 import Subject from './components/Subject';
-import Content from './components/Content';
+import CreateContent from './components/CreateContent';
+import ReadContent from './components/ReadContent';
 import Control from './components/Control';
 import { Component } from 'react';
 
@@ -21,10 +22,11 @@ class App extends Component {
     }
   }
   render() {
-    var _title, _desc = null;
+    var _title, _desc, _article = null;
     if (this.state.mode === 'welcome') {
       _title = this.state.welcome.title;
       _desc = this.state.welcome.desc;
+      _article = <ReadContent title={_title} desc={_desc}></ReadContent>
     } else if (this.state.mode === 'read') {
       var i = 0;
       while (i < this.state.contents.length) {
@@ -36,7 +38,11 @@ class App extends Component {
         }
         i = i + 1;
       }
+      _article = <ReadContent title={_title} desc={_desc}></ReadContent>
+    } else if (this.state.mode === 'create') {
+      _article = <CreateContent></CreateContent>
     }
+
     return (
       <div className="App">
         <Subject 
@@ -58,7 +64,7 @@ class App extends Component {
             }.bind(this)}>{this.state.subject.title}</a></h1> // func 내부 this는 아무것도 가르키지 않는데 bind함수에 객체를 인자로 주면 객체가 주입 된 해당 함수를 리턴
             {this.state.subject.sub}
         </header>  */}
-        <Subject title="React" sub="so fun"></Subject>
+        {/* <Subject title="React" sub="so fun"></Subject> */}
         <TOC
         onChangePage={function(id){
           this.setState({
@@ -72,7 +78,7 @@ class App extends Component {
             mode:_mode
           })
         }.bind(this)}></Control>
-        <Content title={_title} desc={_desc}></Content>
+        {_article}
       </div>
     )
   }

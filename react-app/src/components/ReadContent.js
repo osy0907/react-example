@@ -1,9 +1,10 @@
 import { Component } from 'react';
 
-class Content extends Component {
+class ReadContent extends Component {
+
     render() {
       return (
-          <article>
+        <article>
             <h2>{this.props.title}</h2>
             {this.props.desc}
         </article>
@@ -11,4 +12,4 @@ class Content extends Component {
     }
   }
 
-export default Content;
+export default ReadContent;
