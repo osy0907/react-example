@@ -10,7 +10,7 @@ class App extends Component {
   constructor(props){
     super(props);
     this.state = {  // App이 내부적으로 사용할 상태는 state를 사용한다.
-      mode:'read',
+      mode:'create',
       selected_content_id:2,
       subject:{title:"WEB", sub:"World wide web!"},
       welcome:{title:'Welcome', desc:'Hello, React!'},
