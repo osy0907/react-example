@@ -58,7 +58,9 @@ class App extends Component {
         );
         // 새로운 객체 리턴 방법. 객체 Object.assign, 배열 Array.from
         this.setState({
-          contents:_contents
+          contents:_contents,
+          mode:'read',
+          selected_content_id:this.max_content_id
         });
         console.log(_title, _desc);
       }.bind(this)}></CreateContent>
@@ -76,7 +78,8 @@ class App extends Component {
           i = i + 1;
         }
         this.setState({
-          contents:_contents
+          contents:_contents,
+          mode:'read'
         });
         console.log(_title, _desc);
       }.bind(this)}></UpdateContent>
