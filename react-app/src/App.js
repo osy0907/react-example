@@ -9,6 +9,7 @@ import { Component } from 'react';
 class App extends Component {
   constructor(props){
     super(props);
+    this.max_content_id = 3;
     this.state = {  // App이 내부적으로 사용할 상태는 state를 사용한다.
       mode:'create',
       selected_content_id:2,
@@ -42,13 +43,25 @@ class App extends Component {
     } else if (this.state.mode === 'create') {
       _article = <CreateContent onSubmit={function(_title, _desc) {
         // add content to this.state.contents
+        this.max_content_id = this.max_content_id+1;
+        // this.state.contents.push(
+        //   {id:this.max_content_id, title:_title, desc:_desc}
+        // ); 
+        // state의 값을 바뀌겟지만 react가 모르기 때문에 setState()함수로 알려줘야 함.
+        // 그래야 state변경을 알고 rerender를 할 것임.
+        var _contents = this.state.contents.concat(
+          {id:this.max_content_id, title:_title, desc:_desc}
+        );
+        this.setState({
+          contents:_contents
+        });
         console.log(_title, _desc);
-      }}></CreateContent>
+      }.bind(this)}></CreateContent>
     }
 
     return (
       <div className="App">
-        <Subject 
+        <Subject
           title={this.state.subject.title}
           sub={this.state.subject.sub}
           onChangePage={function(){
