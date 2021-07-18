@@ -2,6 +2,7 @@ import './App.css';
 import TOC from './components/TOC';
 import Subject from './components/Subject';
 import CreateContent from './components/CreateContent';
+import UpdateContent from './components/UpdateContent';
 import ReadContent from './components/ReadContent';
 import Control from './components/Control';
 import { Component } from 'react';
@@ -22,24 +23,27 @@ class App extends Component {
       ]
     }
   }
-  render() {
+
+  getReadContent() {
+    var i = 0;
+      while (i < this.state.contents.length) {
+        var data = this.state.contents[i];
+        if (data.id === this.state.selected_content_id) {
+          return data;
+        }
+        i = i + 1;
+      }
+  }
+
+  getContent() {
     var _title, _desc, _article = null;
     if (this.state.mode === 'welcome') {
       _title = this.state.welcome.title;
       _desc = this.state.welcome.desc;
       _article = <ReadContent title={_title} desc={_desc}></ReadContent>
     } else if (this.state.mode === 'read') {
-      var i = 0;
-      while (i < this.state.contents.length) {
-        var data = this.state.contents[i];
-        if (data.id === this.state.selected_content_id) {
-          _title = data.title;
-          _desc = data.desc;
-          break;
-        }
-        i = i + 1;
-      }
-      _article = <ReadContent title={_title} desc={_desc}></ReadContent>
+      var _content = this.getContent();
+      _article = <ReadContent title={_content._title} desc={_content._desc}></ReadContent>
     } else if (this.state.mode === 'create') {
       _article = <CreateContent onSubmit={function(_title, _desc) {
         // add content to this.state.contents
@@ -49,6 +53,19 @@ class App extends Component {
         // ); 
         // state의 값을 바뀌겟지만 react가 모르기 때문에 setState()함수로 알려줘야 함.
         // 그래야 state변경을 알고 rerender를 할 것임.
+        var _contents = this.state.contents.concat( // concat 원본 객체의 값을 결합해서 새로운 객체 리턴.
+          {id:this.max_content_id, title:_title, desc:_desc}
+        );
+        // 새로운 객체 리턴 방법. 객체 Object.assign, 배열 Array.from
+        this.setState({
+          contents:_contents
+        });
+        console.log(_title, _desc);
+      }.bind(this)}></CreateContent>
+    } else if (this.state.mode === 'update') {
+      _content = this.getReadContent();
+      _article = <UpdateContent data={_content} onSubmit={function(_title, _desc) {
+        this.max_content_id = this.max_content_id+1;
         var _contents = this.state.contents.concat(
           {id:this.max_content_id, title:_title, desc:_desc}
         );
@@ -56,9 +73,12 @@ class App extends Component {
           contents:_contents
         });
         console.log(_title, _desc);
-      }.bind(this)}></CreateContent>
+      }.bind(this)}></UpdateContent>
     }
+    return _article;
+  }
 
+  render() {
     return (
       <div className="App">
         <Subject
@@ -94,7 +114,7 @@ class App extends Component {
             mode:_mode
           })
         }.bind(this)}></Control>
-        {_article}
+        {this.getContent()}
       </div>
     )
   }
