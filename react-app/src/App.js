@@ -12,7 +12,7 @@ class App extends Component {
     super(props);
     this.max_content_id = 3;
     this.state = {  // App이 내부적으로 사용할 상태는 state를 사용한다.
-      mode:'create',
+      mode:'welcome',
       selected_content_id:2,
       subject:{title:"WEB", sub:"World wide web!"},
       welcome:{title:'Welcome', desc:'Hello, React!'},
@@ -37,7 +37,7 @@ class App extends Component {
 
   getContent() {
     var _title, _desc, _article = null;
-    if (this.state.mode === 'welcome') {
+    if (this.state.mode === 'welcome') { 
       _title = this.state.welcome.title;
       _desc = this.state.welcome.desc;
       _article = <ReadContent title={_title} desc={_desc}></ReadContent>
@@ -116,12 +116,31 @@ class App extends Component {
             mode:'read',
             selected_content_id:Number(id)
           });
-        }.bind(this)}
-        data={this.state.contents}></TOC>
+        }.bind(this)} // 120line -> contents의 객체의 값으로 이전 props, 이후 props 비교로 rerender를 결정해서 퍼포먼스를 향상 시킬 수 잇다.
+        data={this.state.contents}></TOC> 
         <Control onChangeMode={function(_mode){
-          this.setState({
-            mode:_mode
-          })
+          if (_mode === 'delete') {
+            if (window.confirm('really?')) {
+              var _contents = Array.from(this.state.contents);
+              var i = 0;
+              while (i < _contents.length) {
+                if (_contents[i].id === this.state.selected_content_id) {
+                  _contents.splice(i, 1);
+                  break;
+                }
+                i = i + 1;
+              }
+              this.setState({
+                mode:'welcome',
+                contents:_contents
+              });
+              alert('deleted');
+            }
+          } else {
+            this.setState({
+              mode:_mode
+            })  
+          }
         }.bind(this)}></Control>
         {this.getContent()}
       </div>
